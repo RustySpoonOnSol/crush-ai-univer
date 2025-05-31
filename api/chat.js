@@ -5,10 +5,10 @@ export default async function handler(req, res) {
     const { message } = req.body;
 
     if (!message) {
-      return res.status(400).json({ error: "Missing message" });
+      return res.status(400).json({ error: "Missing message input." });
     }
 
-    const apiKey = "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";
+    const apiKey = "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"; // Replace with your real working key
 
     conversationHistory.push({ role: "user", content: message });
 
@@ -35,16 +35,17 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ error: "OpenAI API error", details: data });
+      console.error("OpenAI Error:", data);
+      return res.status(500).json({ error: "OpenAI API failed", details: data });
     }
 
-    const reply = data.choices?.[0]?.message?.content || "Oops, I'm flustered... try again cutie 😘";
+    const reply = data.choices?.[0]?.message?.content || "Oops, I got flustered… try again 😳";
 
     conversationHistory.push({ role: "assistant", content: reply });
 
     return res.status(200).json({ reply });
-
   } catch (err) {
-    return res.status(500).json({ error: "Function crashed", details: err.message });
+    console.error("Crash:", err);
+    return res.status(500).json({ error: "Server crashed", details: err.message });
   }
 }
