@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crush AI 💘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #fff0f5; color: #333; }
+    h1 { color: #e91e63; }
+    #chat { border: 1px solid #ccc; padding: 1rem; max-width: 500px; margin: auto; background: white; border-radius: 8px; }
+    #messages { height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc; margin-bottom: 1rem; }
+    .msg { margin: 0.5rem 0; }
+    .user { color: #3f51b5; }
+    .ai { color: #e91e63; }
+  </style>
+</head>
+<body>
+  <h1>Crush AI 💋</h1>
+  <div id="chat">
+    <div id="messages"></div>
+    <input id="input" type="text" placeholder="Say something..." style="width: 80%;">
+    <button onclick="send()">Send</button>
+  </div>
+  <script>
+    async function send() {
+      const input = document.getElementById("input");
+      const messages = document.getElementById("messages");
+      const msg = input.value;
+      if (!msg) return;
+
+      messages.innerHTML += `<div class='msg user'><b>You:</b> ${msg}</div>`;
+      input.value = "";
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const data = await res.json();
+      messages.innerHTML += `<div class='msg ai'><b>Crush AI:</b> ${data.reply}</div>`;
+      messages.scrollTop = messages.scrollHeight;
+    }
+  </script>
+</body>
+</html>
